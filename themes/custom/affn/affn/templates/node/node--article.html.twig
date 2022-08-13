@@ -1,0 +1,49 @@
+
+
+	<div class="newspost-featured-banner bg-gray">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="newspost-featured-bnr-info">
+						<a href="javascript:history.back()" class="back-btn gray-text2"><img src="/{{ directory }}/images/left-arrow.png"> Back</a>
+						{{ title_prefix }}
+							<h1 class="h2">{{ label }}</h1>
+						{{ title_suffix }}
+						{% set date = content.field_date|render|striptags %}
+							{% if date %}
+								<div class="date">Published on:{{ date }}</div>
+							{% else %}
+								{% set createdDate = node.getCreatedTime|date('l, d F Y H:i') %}
+								{% trans %}Published on: {{ createdDate }} {% endtrans %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="newspost-featured-img absolute-img">
+						{% if atricle_image.img %}
+						<img src="{{file_url(atricle_image.img)}}" alt="article image">
+						{% else %}
+						<img src="/{{ directory }}/images/blank-img-small.jpg">
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="single-post-main pt-px-60 pb-px-70">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="single-post-content inner-pad">
+						<h2 class="ft-22">{{ content.field_sub_title|render|striptags }}</h2>
+						{{ content.body }}
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="single-sidebar">
+						{{ drupal_view('latest_news_for_article', 'block_1') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

@@ -1,0 +1,57 @@
+<div class="title-sec text-center bg-gray full-title">
+	<div class="container">
+		<div class="page-title">
+			<a href="javascript:history.back()" class="back-btn gray-text2"><img src="/{{ directory }}/images/left-arrow.png"> Back</a>
+			{{ title_prefix }}
+			{% if label %}
+				<h2 class="red-text title"><span>{{label}}</span></h2>
+			{% endif %}				
+			{{ title_suffix }}
+		</div>
+	</div>
+</div>
+
+<div class="press-main">
+	<div class="press-listing-main pt-px-30">
+		<div class="container">
+			<div class="press-listing-inr">
+				<p class="ft-18">{{ body|raw }}</p>
+				<div class="press-listing-col-wrap inner-pad">
+					<div class="row">
+						<div class="col-md-8">
+							<div class="press-listing-col-list-wrap">								
+								{{ drupal_view('press_link_box', 'block_1') }}		
+							</div>		
+						</div>
+						<div class="col-md-4">
+							<div class="press-list-sidebar">
+								<h2 class="ft-22 gray-text2">PRESS IMAGES</h2>
+
+
+								<div class="latest-side-news press-imagebox-downloads">
+									<div class="our-news-item">
+										<div class="our-news-item-box">							
+											{{ content.field_paragraphs }}		
+										</div>
+
+									</div>
+								</div>				
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="press-paragph press-releases-para_sec">	
+   {{ content.field_paragraphs }}		
+</div>
+<style type="text/css">
+.our-news-item-box .press-releases.bg-gray {
+    display: none;
+}
+.press-paragph .press-sidebar-cls {
+    display: none;
+}
+</style>

@@ -1,0 +1,21 @@
+<div class="press-releases bg-gray">
+	<div class="container">
+		<div class="press-releases-inr">
+			<div class="row">
+				<div class="col-md-5">
+				  <h2 class="ft-22 gray-text2 mb-px-30">{{title}}</h2>
+				  <div class="press-releases-content dot-list">
+						<ul>
+					   {% for key,item in links %}
+							<li>
+								{% if item %}								  
+									 <a target="_blank" href="{{ item.url}}">{{ item.title}}</a>
+								{% endif %}					  
+							</li>
+					  {% endfor %}
+					  </ul>								
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

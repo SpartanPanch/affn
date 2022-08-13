@@ -1,0 +1,167 @@
+{# events page #}
+<div class="title-sec text-center bg-gray full-title">
+	<div class="container">
+		{{ title_prefix }}
+		{% if label %}
+			<h2 class="red-text title"><span>{{label}}</span></h2>
+		{% endif %}				
+		{{ title_suffix }}
+	</div>
+</div>
+<div class="our-events upcoming-events">
+	<div class="container">
+		<div class="our-events-inr pb-px-10">
+			<h3 class="ft-26 mb-px-44">UPCOMING EVENTS</h3>
+			<div class="row">
+				<!-- start  for desktop -->
+				<div class="col-lg-4 col-md-12 d-none d-lg-block">
+					<div class="our-events-tabs">
+
+						<ul class="nav nav-tabs" role="tablist">
+							{% for key,event in events %}  
+								{% if loop.index < 10 %}
+						          {% set current_date =  'now'|date('U') %}
+								   {% set event_date =  event.date|date('U') %}	
+								{# {% if event_date >= current_date %}  #}
+								<li class="nav-item">
+									<a class="nav-link {% if loop.index==1 %}active{% endif %} d-flex" data-toggle="tab" href="#event{{key}}">
+										<div class="event-date d-flex">
+											<span class="event-date-count">{{ event.date|date('j') }}</span>
+											<span class="event-date-month">{{ event.date|date('M') }}</span>
+										</div>
+										<div class="event-tab-title">
+											<h5>{{ event.title }}</h5>
+											<span class="event-type gray-text1">{{ event.termname }}</span>
+										</div>
+									</a>
+								</li>
+							{# {% endif %} #}
+							{% endif %}
+							{% endfor %}						
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-lg-8 col-md-12 d-none d-lg-block">
+					<div class="our-events-tabs-content">
+						<div class="tab-content">
+							{% for key,event in events %} 						
+							{% if loop.index < 10 %}						 
+							 {% set current_date =  'now'|date('U') %}
+								   {% set event_date =  event.date|date('U') %}	
+								{# {% if event_date >= current_date %}  #}
+								<div id="event{{key}}" class="tab-pane {% if loop.index==1 %}active{% endif %}">
+									<div class="our-events-tabs-contentbox">
+									  
+										<h3 class="event-content-title">{{ event.title }}</h3>
+										<div class="row mb-px-10 event-date-type-row">
+											<div class="col-lg-4 col-md-12 d-none d-md-block">
+												<div class="event-date-type-wrap">
+													<p class="event-info-date gray-text2"><strong>Date:</strong> {{ event.date|date('F d, Y') }}</p>
+													<p class="event-info-type gray-text2"><strong>Event:</strong> {{event.termname}}</p>
+												</div>
+											</div>
+											<div class="col-lg-8 col-md-12 d-none d-md-block">
+												<div class="event-date-type-wrap">
+												{# <p class="event-info-type gray-text2"><strong>Time:</strong> {{ event.date|date('h:i','Europe/Berlin') }}</p> #}
+												<p class="event-info-type gray-text2"><strong>Time:</strong> {{ event.time }}</p>	
+											  </div>
+											</div>
+										</div>
+										<div class="row event-content-img-row">
+											<div class="col-md-12">
+												<div class="event-content-img">
+													{% if event.imguri %}
+														<img src="{{file_url(event.imguri)}}" alt="renewable-energy">
+													{% endif %}
+												</div>							
+											</div>
+										</div>
+										<br>
+										<div class="event-content-desc">
+											{{ event.body|raw }}
+										</div>
+									</div>
+								</div>	
+								{# {% endif %} #}
+								{% endif %}
+								{% endfor %}					
+							</div>
+						</div>
+					</div>
+					<!-- end  for desktop -->
+				<!-- start  for mobile -->
+				<div class="col-sm-12  d-lg-none ev_page-mobile-events">
+					<div class="our-events-tabs">
+						<ul class="nav nav-tabs" role="tablist">
+							{% for key,event in events %} 
+							{% if loop.index < 10 %} 
+								<li class="nav-item">
+									<a class="nav-link d-flex event-list-tabs-mobile"  data-toggle="tab" id="#event{{key}}">
+										<div class="event-date d-flex">
+											<span class="event-date-count">{{ event.date|date('j') }}</span>
+											<span class="event-date-month">{{ event.date|date('M') }}</span>
+										</div>
+										<div class="event-tab-title">
+											<h5>{{ event.title }}</h5>
+											<span class="event-type gray-text1">{{ event.termname }}</span>
+										</div>
+									</a>
+								</li>
+									{% endif %}
+							{% endfor %}						
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-sm-12  d-lg-none">
+					<div class="our-events-tabs-content">
+						<div class="tab-content">
+							{% for key,event in events %}     
+							{% if loop.index < 10 %}
+								<div id="event{{key}}" class="tab-pane-mobile tab-pane">
+									<div class="our-events-tabs-contentbox">
+									 <a class=" events-back-button gray-text2" id="events-back-button"><img
+                          					 src="/{{ directory }}/images/left-arrow.png" alt='left arrow'> Back</a>   
+										<h3 class="event-content-title">{{ event.title }}</h3>
+										<div class="row mb-px-10 event-date-type-row">
+											<div class="col-sm-4  d-md-none">
+												<div class="event-date-type-wrap">
+													<p class="event-info-date gray-text2"><strong>Date:</strong> {{ event.date|date('F d, Y') }}</p>
+													<p class="event-info-type gray-text2"><strong>Event:</strong> {{event.termname}}</p>
+												</div>
+											</div>
+											<div class="col-sm-8   d-md-none">
+												<div class="event-date-type-wrap">						{# <p class="event-info-type gray-text2"><strong>Time:</strong> {{ event.date|date('H:i',CET) }}</p> #}
+													<p class="event-info-type gray-text2"><strong>Time:</strong> {{ event.time }}</p>	
+												</div>
+											</div>
+										</div>
+										<div class="row event-content-img-row">
+											<div class="col-md-12">
+												<div class="event-content-img">
+													{% if event.imguri %}
+														<img src="{{file_url(event.imguri)}}" alt="renewable-energy">
+													{% endif %}
+												</div>							
+											</div>
+										</div>
+										<br>
+										<div class="event-content-desc">
+											{{ event.body|raw }}
+										</div>
+									</div>
+								</div>	
+									{% endif %}
+								{% endfor %}					
+							</div>
+						</div>
+					</div>
+					<!-- end  for mobile -->
+
+					
+				</div>
+			</div>
+		</div>
+	</div>
+{{ drupal_view('past_events', 'block_1') }}

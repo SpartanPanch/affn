@@ -1,0 +1,45 @@
+<div class="newspost-featured-banner members-detail-banner pb-px-10">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class="newspost-featured-bnr-info">
+						<a href="javascript:history.back()" class="back-btn gray-text2"><img src="/{{ directory }}/images/left-arrow.png"> Back</a>
+						{{ title_prefix }}
+							<h1 class="h2">{{ label }}</h1>
+						{{ title_suffix }}						
+						<span class="member-detail-info ggg">{{ content.field_industry|render|striptags }}</span>
+						<div class="members-detail-contact">		
+							{% if content.field_website_link.0['#title'] %}
+							    <p><strong>Website:</strong> <a href="{{ content.field_website_link.0['#url'] }}">{{ content.field_website_link.0['#title'] }}</a></p>
+						     {% endif %}
+							{% if content.field_email|render|striptags %}
+							    <p><strong>Email:</strong> <a href="mailto:{{ content.field_email|render|striptags|replace({' ': ''}) }}">{{ content.field_email|render|striptags }}</a></p>
+  							  {% endif %}
+  							{% if content.field_phonee|render|striptags %}
+						    	<p><strong>Phone:</strong> <a href="tel:{{ content.field_phonee|render|striptags|replace({' ': ''}) }}">{{ content.field_phonee|render|striptags }} </a></p>
+						   {% endif %}
+						</div>
+						
+					</div>
+				</div>
+				<div class="col-lg-5 d-flex align-items-center">
+					<div class="newspost-featured-img">
+						{% if atricle_image.img %}
+						<img src="{{file_url(atricle_image.img)}}" alt="article image">
+						{% else %}
+						<img src="/{{ directory }}/images/blank-img-small.jpg">
+						{% endif %}				
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="members-detail-main pt-px-60 pb-px-70">
+		<div class="container">
+			<div class="members-detail-content inner-pad">
+				<h2 class="ft-22">{{ content.field_sub_title|render|striptags }}</h2>
+			     {{ content.body }}
+			</div>
+		</div>
+	</div>

@@ -1,0 +1,892 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media_entity\MediaInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\taxonomy\Entity\Term;
+ use Drupal\Core\Url;
+use Drupal\webform\WebformInterface;
+use Drupal\webform\Plugin\WebformHandlerBase;
+use Drupal\webform\webformSubmissionInterface;
+use Drupal\webform\WebformSubmissionForm;
+use Drupal\webform\Entity\Webform;
+use Drupal\webform\Entity\WebformSubmission;
+use Drupal\Core\Session\AccountInterface;
+
+include 'functions/html.php';
+include 'functions/node.php';
+include 'functions/page.php';
+include 'functions/paragraph.php';
+include 'functions/region.php';
+include 'functions/theme.php';
+include 'functions/view.php';
+include 'functions/block.php';
+
+
+$current_path = \Drupal::service('path.current')->getPath();
+$result = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+
+// Drupal::service('module_installer')->uninstall(['pathauto']);
+
+// -------------------------------------------------------------------------- //
+
+/**
+ * Custom function for fetching fields for a hook.
+ *
+ * @param object $hook
+ * @param array $fields
+ *
+ * @return array
+ */
+function getFields($hook, $fields) {
+  if ($hook === NULL) {
+    return;
+  }
+
+  if (in_array('anchor', $fields) && $hook->hasField('field_anchor')) {
+    $data['anchor'] = urlencode($hook->get('field_anchor')->value);
+  }
+
+  if (in_array('address', $fields) && $hook->hasField('field_address')) {
+    $data['address'] = $hook->get('field_address')->value;
+  }
+
+
+
+  if (in_array('body', $fields) && $hook->hasField('body')) {
+    $data['body'] = $hook->get('body')->value;
+    $data['body_summary'] = $hook->get('body')->summary;
+  }
+
+  if (in_array('content', $fields) && $hook->hasField('field_content')) {
+    $data['content'] = $hook->get('field_content')->value;
+  }
+
+
+ 
+  if (in_array('popup_title', $fields) && $hook->hasField('field_popup_title')) {
+    $data['popup_title'] = $hook->get('field_popup_title')->value;
+  }
+
+  if (in_array('popup_content', $fields) && $hook->hasField('field_popup_content')) {
+    $data['popup_content'] = $hook->get('field_popup_content')->value;
+  }
+
+  $data['categories_sequence'] = [];
+
+  if (in_array('categories', $fields) && $hook->hasField('field_categories')) {
+    $data['categories'] = [];
+
+    $i = 0;
+    foreach ($hook->get('field_categories') as $tag) {
+      $taxonomy = Term::load($tag->target_id);
+
+      $data['categories'][$taxonomy->id()] = [
+        'description' => $taxonomy->description->value,
+        'title' => $taxonomy->label(),
+      ];
+    }
+  }
+
+
+  if (in_array('description', $fields)) {
+    if ($hook->hasField('description')) {
+      $data['description'] = $hook->get('description')->value;
+    }
+    else {
+      if ($hook->hasField('field_description')) {
+        $data['description'] = $hook->get('field_description')->value;
+      }
+    }
+  }
+
+  if (in_array('applications', $fields) && $hook->hasField('field_applications')) {
+    $data['applications'] = $hook->get('field_applications')->value;
+  }
+
+  if (in_array('details', $fields) && $hook->hasField('field_details')) {
+    $data['details'] = $hook->get('field_details')->value;
+  }
+
+  if (in_array('description_bottom', $fields) && $hook->hasField('field_description_bottom')) {
+    $data['description_bottom'] = $hook->get('field_description_bottom')->value;
+  }
+
+
+  if (in_array('skew_direction', $fields) && $hook->hasField('field_skew_direction')) {
+    $data['skew_direction'] = $hook->get('field_skew_direction')->value;
+  }
+
+  if (in_array('media_size', $fields) && $hook->hasField('field_media_size')) {
+    $data['media_size'] = $hook->get('field_media_size')->value;
+
+    if (!empty($data['media_size'])) {
+      $media_size_1 = str_replace('col-lg-', '', $data['media_size']);
+
+      $data['media_size_1'] = 'col-xl-' . $media_size_1;
+      $data['media_size_2'] = 'col-xl-' . (12 - $media_size_1);
+    }
+  }
+
+  if (array_key_exists('image', $fields) && $hook->hasField('field_image')) {
+    $data['image'] = getMedia($hook->get('field_image')->target_id, $fields['image']);
+  }
+  else {
+    if (in_array('image', $fields) && $hook->hasField('field_image')) {
+      $data['image'] = getMedia($hook->get('field_image')->target_id);
+    }
+    else {
+      if (in_array('icon', $fields) && $hook->hasField('field_icon')) {
+        $data['icon'] = getImage($hook->get('field_icon')->target_id, NULL, 'source');
+      }
+    }
+  }
+
+  if ((array_key_exists('images', $fields) || in_array('images', $fields)) && $hook->hasField('field_images')) {
+    $field_images = $hook->get('field_images')->getValue();
+    $data['images'] = [];
+
+    foreach ($field_images as $k => $value) {
+      $target_id = $value['target_id'];
+      $options = array_key_exists('images', $fields) ? $fields['images'] : NULL;
+      $data['images'][] = getImage($target_id,$options);
+    }
+  }
+
+  if (in_array('image_overflow', $fields) && $hook->hasField('field_image_overflow')) {
+    $data['image_overflow'] = $hook->get('field_image_overflow')->value;
+  }
+
+  if (in_array('auto_play', $fields) && $hook->hasField('field_auto_play')) {
+    $data['auto_play'] = $hook->get('field_auto_play')->value;
+  }
+
+  if (in_array('is_medley', $fields) && $hook->hasField('field_is_medley')) {
+    $data['is_medley'] = ($hook->get('field_is_medley')->value === TRUE || intval($hook->get('field_is_medley')->value) === 1);
+  }
+
+  if (in_array('label', $fields)) {
+    if ($hook->hasField('label')) {
+      $data['label'] = $hook->get('label')->value;
+    }
+    else {
+      if ($hook->hasField('field_label')) {
+        $data['label'] = $hook->get('field_label')->value;
+      }
+    }
+  }
+
+  if (in_array('template_type', $fields) && $hook->hasField('field_template_type')) {
+    $data['template_type'] = $hook->get('field_template_type')->value;
+  }
+
+ if (in_array('link', $fields) && $hook->hasField('field_link') && $hook->get('field_link')->uri !== NULL) {
+   $options = $hook->get('field_link')->options;
+    $data['link'] = [
+      'url' => Url::fromUri($hook->get('field_link')->uri)->toString(),
+      'title' => isset($options['attributes']['title']) ? $options['attributes']['title'] : $hook->get('field_link')->title,
+      'classes' => isset($options['attributes']['class']) ? implode(' ', $options['attributes']['class']) : '',
+      'target' => $options['attributes']['target'] ?? '',
+    ];
+  }
+
+ if (in_array('website', $fields) && $hook->hasField('field_website_link') && $hook->get('field_website_link')->uri !== NULL) {
+   $options = $hook->get('field_website_link')->options;
+    $data['website'] = [
+      'url' => Url::fromUri($hook->get('field_website_link')->uri)->toString(),
+      'title' => isset($options['attributes']['title']) ? $options['attributes']['title'] : $hook->get('field_website_link')->title,
+      'classes' => isset($options['attributes']['class']) ? implode(' ', $options['attributes']['class']) : '',
+      'target' => $options['attributes']['target'] ?? '',
+    ];
+  }
+
+  if (in_array('link_teaser', $fields) && $hook->hasField('field_link_teaser') && $hook->get('field_link_teaser')->uri !== NULL) {
+
+    $options = $hook->get('field_link_teaser')->options;
+
+    $data['link_teaser'] = [
+      'url' => Url::fromUri($hook->get('field_link_teaser')->uri)->toString(),
+      'title' => isset($options['attributes']['title']) ? $options['attributes']['title'] : $hook->get('field_link_teaser')->title,
+      'classes' => isset($options['attributes']['class']) ? implode(' ', $options['attributes']['class']) : '',
+      'target' => $options['attributes']['target'] ?? '',
+    ];
+  }
+
+  if (in_array('hide_menu', $fields) && $hook->hasField('field_hide_menu')) {
+    $data['hide_menu'] = $hook->get('field_hide_menu')->value;
+  }
+
+  if (in_array('menu', $fields) && $hook->hasField('field_menu')) {
+    $data['menu'] = $hook->get('field_menu')->target_id;
+  }
+
+  if (in_array('text_alignment', $fields) && $hook->hasField('field_text_alignment')) {
+    $data['text_alignment'] = $hook->get('field_text_alignment')->value;
+  }
+
+  if (in_array('title_top', $fields) && $hook->hasField('field_title_top')) {
+    $title_top = $hook->get('field_title_top')->getValue();
+
+    if (!empty($title_top)) {
+      $data['title_top'] =  [
+        'url' => Url::fromUri($hook->get('field_title_top')->uri)->toString(),
+        'title' => $hook->get('field_title_top')->title
+      ];
+    }
+  }
+
+  if (in_array('links', $fields) && $hook->hasField('field_links')) {
+    $data['links'] = [];
+
+    foreach ($hook->get('field_links') as $link) {
+
+      $options = @$link->options;
+
+      $data['links'][] = [
+        'url' => Url::fromUri($link->uri)->toString(),
+        'title' => $link->title,
+        'classes' => isset($options['attributes']['class']) ? implode(' ', $options['attributes']['class']) : '',
+      ];
+    }
+  }
+
+  if (in_array('list', $fields) && $hook->hasField('field_list')) {
+    $data['list'] = [];
+
+    foreach ($hook->get('field_list') as $item) {
+      $data['list'][] = $item->value;
+    }
+  }
+
+  if (array_key_exists('media', $fields) && $hook->hasField('field_media')) {
+    $data['media'] = getMedia($hook->get('field_media')->target_id, $fields['media']);
+  } else if (in_array('media', $fields) && $hook->hasField('field_media')) {
+    $data['media'] = getMedia($hook->get('field_media')->target_id);
+  }
+
+
+  // if (array_key_exists('download_file', $fields) && $hook->hasField('field_download_file')) {
+  //   $data['download_file'] = getMedia($hook->get('field_download_file')->target_id, $fields['download_file']);
+  // } else if (in_array('download_file', $fields) && $hook->hasField('field_download_file')) {
+  //   $data['download_file'] = getMedia($hook->get('field_download_file')->target_id);
+  // }
+
+
+ if (in_array('download_file', $fields) && $hook->hasField('field_download_file')) {
+     $mid = $hook->get('field_download_file')->target_id;
+     $media = Media::load($mid);
+     $fid = $media->field_media_document->target_id;    
+     $data['download_file'] = getFileUrl($fid);
+  }
+
+
+  
+  if (array_key_exists('mobile_media', $fields) && $hook->hasField('field_mobile_media')) {
+    $data['mobile_media'] = getMedia($hook->get('field_mobile_media')->target_id, $fields['mobile_media']);
+  } else if (in_array('mobile_media', $fields) && $hook->hasField('field_mobile_media')) {
+    $data['mobile_media'] = getMedia($hook->get('field_mobile_media')->target_id);
+  }
+
+  if (array_key_exists('video_poster', $fields) && $hook->hasField('field_video_poster')) {
+    $data['video_poster'] = getMedia($hook->get('field_video_poster')->target_id, $fields['video_poster']);
+  } else if (in_array('video_poster', $fields) && $hook->hasField('field_video_poster')) {
+    $data['video_poster'] = getMedia($hook->get('field_video_poster')->target_id);
+  }
+
+  if (in_array('name', $fields)) {
+    if ($hook->hasField('name')) {
+      $data['name'] = $hook->get('name')->value;
+    }
+  }
+
+  if (in_array('node', $fields) && $hook->hasField('field_node') && $hook->get('field_node')->target_id !== NULL) {
+    $node = Node::load($hook->get('field_node')->target_id);
+
+    $data['node'] = [
+      'url' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()])
+        ->toString(),
+      'title' => $node->label(),
+    ];
+  }
+
+  if (in_array('file_download', $fields) && $hook->hasField('field_file_download')) {
+    $fid = $hook->get('field_file_download')->target_id;
+    $data['file_download'] = getFileUrl($fid);
+  }
+
+ 
+
+
+  if (in_array('hero_type', $fields) && $hook->hasField('field_hero_type')) {
+    $data['hero_type'] = $hook->get('field_hero_type')->value;
+  }
+
+  if (in_array('type_of_tabs', $fields) && $hook->hasField('field_type_of_tabs')) {
+    $data['type_of_tabs'] = $hook->get('field_type_of_tabs')->value;
+  }
+
+  if (in_array('sub_title', $fields) && $hook->hasField('field_sub_title')) {
+    $data['sub_title'] = $hook->get('field_sub_title')->value;
+  }
+
+
+
+ if (in_array('email', $fields) && $hook->hasField('field_email')) {
+    $data['email'] = $hook->get('field_email')->value;
+  }
+
+
+
+ if (in_array('phonee', $fields) && $hook->hasField('field_phonee')) {
+    $data['phonee'] = $hook->get('field_phonee')->value;
+  }
+
+
+ if (in_array('industry', $fields) && $hook->hasField('field_industry')) {
+    $data['industry'] = $hook->get('field_industry')->value;
+  }
+
+
+ // if (in_array('sub_title', $fields) && $hook->hasField('field_sub_title')) {
+ //    $data['sub_title'] = $hook->get('field_sub_title')->value;
+ //  }
+
+ // if (in_array('sub_title', $fields) && $hook->hasField('field_sub_title')) {
+ //    $data['sub_title'] = $hook->get('field_sub_title')->value;
+ //  }
+
+
+  if (in_array('position', $fields) && $hook->hasField('field_position')) {
+    $data['position'] = $hook->get('field_position')->value;
+  }
+
+  if (in_array('summary', $fields) && $hook->hasField('body')) {
+    $data['summary'] = strip_tags($hook->get('body')->value);
+  }
+
+  if (in_array('product_tabs', $fields) && $hook->hasField('field_product_tabs')) {
+    $data['product_tabs'] = $hook->get('field_product_tabs')->getValue();
+  }
+
+  if (in_array('tab_order', $fields) && $hook->hasField('field_tab_order')) {
+    $data['tab_order'] = $hook->get('field_tab_order')->value;
+  }
+
+  if (in_array('text', $fields) && $hook->hasField('field_text')) {
+    $data['text'] = nl2br($hook->get('field_text')->value);
+  }
+
+  if (in_array('tid', $fields)) {
+    $data['tid'] = $hook->get('tid')->value;
+  }
+
+  if (in_array('title', $fields) && $hook->hasField('field_title')) {
+    $data['title'] = $hook->get('field_title')->value;
+  }
+
+  if (in_array('heading_title', $fields) && $hook->hasField('field_heading_title')) {
+    $heading_title_value = $hook->get('field_heading_title')->getValue();
+    $size = NULL;
+    $text = NULL;
+    if (!empty($heading_title_value[0]['text'])) {
+      $size = $heading_title_value[0]['size'];
+      $text = $heading_title_value[0]['text'];
+    }
+    $data['heading_title']['size'] = $size;
+    $data['heading_title']['value'] = $text;
+    $data['heading_title']['rendered'] = $size != NULL && $text != NULL ? "<$size>$text</$size>" : '';
+  }
+
+  if (in_array('heading_title_position', $fields) && $hook->hasField('field_heading_title_position')) {
+    $heading_title_position = $hook->get('field_heading_title_position')->value;
+
+    $data['heading_title_position'] = $heading_title_position ? $heading_title_position : 'in-block';
+  }
+
+  if (in_array('block_size', $fields) && $hook->hasField('field_block_size')) {
+    $block_size = $hook->get('field_block_size')->value;
+    $data['block_size'] = $block_size ? $block_size : 'standard';
+  }
+
+  if (in_array('image_place', $fields) && $hook->hasField('field_image_place')) {
+    $data['image_place'] = $hook->get('field_image_place')->value;
+  }
+
+  if (array_key_exists('video', $fields) && $hook->hasField('field_video')) {
+    $data['video'] = getMedia($hook->get('field_video')->target_id, $fields['video']);
+  }
+  else {
+    if (in_array('video', $fields) && $hook->hasField('field_video')) {
+      $data['video'] = getMedia($hook->get('field_video')->target_id);
+    }
+  }
+
+  if (in_array('feature', $fields) && $hook->hasField('field_feature')) {
+    $data['feature'] = $hook->get('field_feature')->getValue();
+  }
+
+  if (in_array('url', $fields)) {
+    $data['url'] = $hook->url();
+  }
+
+  if (in_array('uuid', $fields)) {
+    $data['uuid'] = $hook->uuid();
+  }
+
+  return $data ?? [];
+}
+
+// -------------------------------------------------------------------------- //
+
+/**
+ * Get information of image from provided id.
+ *
+ * @param $fid
+ * @param null $options
+ * @param boolean $source
+ *
+ * @return array|null
+ */
+function getImage($fid, $options = NULL, $source = FALSE) {
+  if ($fid === NULL) {
+    return NULL;
+  }
+
+  $file = \Drupal\file\Entity\File::load($fid);
+
+  if ($file instanceof Drupal\file\Entity\File) {
+
+    $url = $file->createFileUrl();
+
+    $mime = $file->getMimeType();
+
+    if ($source && strpos($mime, 'svg') !== FALSE) {
+      $fileUri = $file->getFileUri();
+
+      if (file_exists($fileUri)) {
+        $url = file_get_contents($fileUri);
+      }
+
+    }
+    else {
+      $style = ($options !== NULL && array_key_exists('style', $options)) ? $options['style'] : 'original';
+
+      if ($style != 'original') {
+        $imageStyle = ImageStyle::load($style);
+        if ($imageStyle instanceof ImageStyle) {
+          $url = $imageStyle->buildUrl($file->getFileUri());
+//          $url = $imageStyle->buildUri($file->getFileUri());
+        }
+      }
+    }
+
+    if ($url) {
+      $data = [
+        'image' => $url,
+        'name' => $file->label(),
+        'type' => 'image',
+        'uuid' => $file->uuid(),
+      ];
+    }
+
+  }
+
+  return $data ?? [];
+}
+
+/**
+ * Get information of media from provided id.
+ *
+ * @param int $mid
+ * @param array $options
+ *
+ * @return array
+ */
+function getMedia($mid, $options = NULL) {
+  if ($mid === NULL) {
+    return NULL;
+  }
+
+  $media = Media::load($mid);
+
+  $style = ($options !== NULL && array_key_exists('style', $options)) ? $options['style'] : 'original';
+
+  if (isset($media->field_media_oembed_video)) {  
+
+    $video_url = $media->field_media_oembed_video->value;
+
+      if($video_url){
+        if (strpos($video_url, '?v=') !== FALSE) {
+          $video_url = 'https://www.youtube.com/embed/' . explode('?v=', $video_url)[1];
+        }
+        else {
+          if (strpos($video_url, 'youtu.be/')) {
+            $video_url = 'https://www.youtube.com/embed/' . explode('youtu.be/', $video_url)[1];
+          }
+        }
+
+        $data = [
+          'name' => $media->name->value,
+          // 'thumbnail' => ImageStyle::load('thumbnail_video')->buildUrl(File::load($media->thumbnail->target_id)->getFileUri()),
+          'thumbnail' => 'https://img.youtube.com/vi/' . explode('embed/', $video_url)[1] . '/maxresdefault.jpg',
+          'type' => 'video',
+          'url' => $video_url . '?modestbranding=1&rel=0',
+          'uuid' => $media->uuid->value,
+          'remote' => 1
+        ]; 
+      }
+
+  }
+  elseif (isset($media->field_media_video_embed_field)) {
+    $video_url = $media->field_media_video_embed_field->value;
+
+    $data = [
+      'name' => $media->name->value,
+      // 'thumbnail' => ImageStyle::load('thumbnail_video')->buildUrl(File::load($media->thumbnail->target_id)->getFileUri()),
+      'thumbnail' => '',
+      'type' => 'video',
+      'url' => $video_url,
+      'uuid' => $media->uuid->value,
+      'remote' => 1
+    ];
+  }
+  elseif (isset($media->field_media_video_file)) {
+    $video_url = NULL;
+
+    if ($v = $media->get('field_media_video_file')->target_id) {
+      if ($video_file = File::load($v)) {
+        $video_url = $video_file->createFileUrl();
+      }
+    }
+
+    $data = [
+      'name' => $media->name->value,
+      'thumbnail' => '',
+      'type' => 'video',
+      'url' => $video_url,
+      'uuid' => $media->uuid->value,
+      'remote' => 0
+    ];
+  }
+  elseif (isset($media->field_media_image)) {
+
+    if ($media->field_media_image->target_id !== NULL) {
+
+      $file = File::load($media->field_media_image->target_id);
+
+      if ($file) {
+        $mime = $file->getMimeType();
+
+        if ($mime == 'image/svg+xml') {  //'image/svg+xml';
+          $data = [
+            'image' => $file->createFileUrl(),
+            'name' => $media->name->value,
+            'type' => 'image',
+            'uuid' => $media->uuid->value,
+          ];
+        } else {
+          $imageStyle = ImageStyle::load($style);
+          if ($imageStyle instanceof ImageStyle) {
+            $data = [
+              'image' => ImageStyle::load($style)
+                ->buildUrl($file->getFileUri()),
+              'name' => $media->name->value,
+              'type' => 'image',
+              'uuid' => $media->uuid->value,
+            ];
+
+            if ($style == 'original') {
+              $imageStyleMobile = ImageStyle::load('original_mobile');
+              if ($imageStyleMobile instanceof ImageStyle) {
+                $data['image_mobile'] = ImageStyle::load('original_mobile')
+                  ->buildUrl($file->getFileUri());
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+    if ($media->field_media_image->alt !== NULL) {
+      $data['alt'] = $media->field_media_image->alt;
+    }
+  }
+
+  return $data ?? [];
+}
+
+// -------------------------------------------------------------------------- //
+
+/**
+ * Custom function for fetching benefits.
+ *
+ * @param string $type
+ *
+ * @return array
+ */
+function getBenefits($type = 'product_page', $filters = NULL) {
+
+  $query = \Drupal::entityQuery('taxonomy_term')
+    ->sort('weight', 'ASC');
+
+  if ($type === 'product_page') {
+    $query->condition('vid', 'benefits_product_');
+  }
+  elseif ($type === 'medley') {
+    $query->condition('vid', 'benefits_medley');
+  }
+
+  if ($filters) {
+    if (isset($filters['industry'])) {
+      $query->condition('field_industries', $filters['industry'], 'IN');
+    }
+  }
+
+  foreach ($query->execute() as $tid) {
+    $term = Term::load($tid);
+
+    $data[] = getFields($term, [
+      'description',
+      'media' => [
+        'style' => 'icon',
+      ],
+      'name',
+      'uuid',
+    ]);
+  }
+
+  return $data ?? [];
+}
+
+// -------------------------------------------------------------------------- //
+
+/**
+ * Custom function for fetching categories.
+ *
+ * @param null $content_type
+ *
+ * @return array
+ */
+function getCategories($content_type = NULL) {
+  $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  $query = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'categories')
+    ->sort('weight', 'ASC');
+
+  if (!empty($content_type)) {
+    $ids = getAvailableCategories($content_type, $lang);
+
+    //  get available categories
+    if (!empty($ids)) {
+      $query->condition('field_categories_target_id', $ids, 'IN');
+    } else {
+      return [];
+    }
+  }
+
+  foreach ($query->execute() as $tid) {
+    $term = Term::load($tid);
+
+    $data[] = getFields($term, [
+      'tid',
+      'name',
+    ]);
+  }
+
+  return $data ?? [];
+}
+
+/**
+ * Get Available Categories Ids
+ *
+ * @param $content_type
+ * @param $lang
+ * @param null $ids
+ *
+ * @return array
+ */
+function getAvailableCategories($content_type, $lang, $ids = NULL) {
+  $database = \Drupal::database();
+
+  $query = $database->select('node__field_categories', 'fc')
+    ->fields('fc', ['entity_id', 'field_categories_target_id']);
+  //  add conditions
+  if ($content_type == 'article') {
+    $query->condition('bundle', ['article', 'campaign_page'], 'IN');
+  } else {
+    $query->condition('bundle', $content_type);
+  }
+  $query->condition('langcode', $lang);
+  $query->condition('deleted', 0);
+
+  if (!empty($ids)) {
+    $query->condition('field_categories_target_id', $ids, 'IN');
+  }
+
+  //  add group by
+  $query->groupBy('entity_id');
+  $query->groupBy('field_categories_target_id');
+
+  $results = [];
+  foreach ($query->execute() as $value) {
+    $results[$value->field_categories_target_id] = $value->field_categories_target_id;
+  }
+
+  return $results;
+}
+
+/**
+ * Get Available SubCategories Ids
+ *
+ * @param $content_type
+ * @param $lang
+ * @param null $ids
+ *
+ * @return array
+ */
+function getAvailableSubCategories($content_type, $lang, $ids = NULL) {
+  $database = \Drupal::database();
+
+  $query = $database->select('node__field_sub_categories', 'fc')
+    ->fields('fc', ['entity_id', 'field_sub_categories_target_id']);
+  //  add conditions
+  $query->condition('bundle', $content_type);
+  $query->condition('langcode', $lang);
+  $query->condition('deleted', 0);
+
+  if (!empty($ids)) {
+    $query->condition('field_sub_categories_target_id', $ids, 'IN');
+  }
+
+  //  add group by
+  $query->groupBy('entity_id');
+  $query->groupBy('field_sub_categories_target_id');
+
+  $results = [];
+  foreach ($query->execute() as $value) {
+    $results[$value->field_sub_categories_target_id] = $value->field_sub_categories_target_id;
+  }
+
+  return $results;
+}
+
+/**
+ * Get SubCategories Terms
+ *
+ * @param $parent_tid
+ *
+ * @return mixed
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function getSubCategoryTerms($parent_tid) {
+  //  try to retrieve subterms
+  $vid = 'categories';
+  $depth = 1; // 1 to get only immediate children, NULL to load entire tree
+  $load_entities = TRUE; // True will return loaded entities rather than ids
+  return \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid, $parent_tid, $depth, $load_entities);
+}
+
+
+
+// -------------------------------------------------------------------------- //
+
+/**
+ * Get file Url
+ *
+ * @param $fid
+ *
+ * @return null|string
+ */
+function getFileUrl($fid) {
+  if ($fid === NULL) {
+    return NULL;
+  }
+
+  $file = \Drupal\file\Entity\File::load($fid);
+
+  if ($file instanceof Drupal\file\Entity\File) {
+    return $file->createFileUrl(FALSE);
+  }
+
+  return NULL;
+}
+
+
+
+/**
+ * Get Application Url by subcategory_term
+ *
+ * @param $sub_category_tid
+ *
+ * @return \Drupal\Core\GeneratedUrl|null|string
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function getApplicationUrl($sub_category_tid) {
+
+  $nids = \Drupal::entityQuery('node')
+    ->condition('field_sub_categories', $sub_category_tid)
+    ->condition('type', 'application_page')
+    ->condition('status', 1)
+    ->execute();
+
+  $nid = !empty($nids) ? reset($nids) : NULL;
+
+  if ($nid != NULL) {
+    $node = \Drupal\node\Entity\Node::load($nid);
+
+    return $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+  }
+  return NULL;
+}
+
+
+
+
+
+// working fine but after submit the form 
+
+function affn_form_alter(&$form,$form_state, $form_id) {  
+     
+  if ($form_id == 'webform_submission_join_form_node_1_add_form'  || $form_id == 'webform_submission_subscribe_node_45_add_form' || $form_id == 'webform_submission_get_in_touch_node_33_add_form' || $form_id == 'webform_submission_join_node_1_add_form' )
+    {
+      $form['actions']['submit']['#validate'][] = 'affn_operation_form_validate';
+    }
+}
+
+function affn_operation_form_validate(&$form , $form_state) {
+    $captcha_responce_join_form = $form_state->getValue('captcha_response_join');
+    $response = json_decode(file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=6Le18jMbAAAAANpoKKdA1PZtZIjll1i_dNesxw4b&response=".$captcha_responce_join_form."&remoteip=".$_SERVER['REMOTE_ADDR']), true);
+
+    $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://"; 
+    $current_path = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    
+
+    if($response['success'] == false)
+    {
+        // $current_path = \Drupal::service('path.current')->getPath();
+        header("Refresh:0; url=".$current_path);
+        exit();
+    }
+    else
+    {
+        // drupal_set_message('Form submitted');
+        return;
+    }
+
+}
+
+
+/**
+ * Implements hook_webform_submission_presave().
+ */
+// function affn_webform_submission_presave($node, &$submission) {
+//   $user = user_load($submission->uid);
+// }
+

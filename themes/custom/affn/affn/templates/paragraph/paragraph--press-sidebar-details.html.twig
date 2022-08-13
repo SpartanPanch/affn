@@ -1,0 +1,17 @@
+
+<div class="press-sidebar-cls">
+	{% for paragraph in paragraphs %} 
+	<div class="our-news-item">
+		<div class="our-news-item-box">
+			<div class="press-imagebox-downloads-img field__item">
+				<img src="{{ paragraph.media.image }}" alt="logo">
+			</div>
+			<div class="press-imagebox-downloads-desc">
+				<p>{{ paragraph.title }}</p>
+				<p><a href="{{ paragraph.link.url }}" class="download-link"><img src="/{{ directory }}/images/download.png"
+					alt="download"> {{ paragraph.link.title }}</a></p>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>

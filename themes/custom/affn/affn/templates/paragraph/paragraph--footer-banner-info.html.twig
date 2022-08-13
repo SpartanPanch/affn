@@ -1,0 +1,22 @@
+<div class="newspost-featured-banner about-business">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="newspost-featured-bnr-info arrow-list">
+						<h1 class="h2">{{ title_prefix }}{{ title }}{{ title_suffix }}</h1>
+							{{ content|raw }}
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="newspost-featured-img absolute-img">
+						{% if media %}
+						{# {{media.image}} #}
+						<img src="{{media.image}}" alt="{{ media.alt }}">
+						{% else %}
+						  <img src="/{{ directory }}/images/blank-img-small.jpg" alt="image">
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

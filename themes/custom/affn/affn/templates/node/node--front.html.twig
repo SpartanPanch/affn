@@ -1,0 +1,67 @@
+ {#
+    : Node for front page
+#}
+  {# <div class="banner-sec" style="background-image: url({{ file_url(node.field_media.entity.field_media_image.entity.fileuri)}});"> #}
+  <div class="banner-row-wrap">
+    <div class="row">
+      <div class="col-md-12 col-lg-12 d-none d-md-block">
+        <div class="banner-sec" style="background-image: url({{media.image}});">
+          <div class="container">
+            <div class="banner-inr">
+              <div class="row align-items-center">
+                <div class="col-md-7">
+                  <div class="banner-content">
+                    <h1> {{ title_prefix }}{{ label }}{{ title_suffix }}<span class="red-text">{{ sub_title }}</span></h1>
+                    <br>
+                      {{ body|raw }}
+                    <div class="banner-form c-form" id='desktop_form_remove_captcha_issue'>  
+                      {# {{ drupal_entity('webform', 'join') }}     #}
+                       {{ drupal_entity('webform', 'join_form') }}     
+  
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 d-md-none ">
+        <div class="banner-sec" style="background-image: url({{ file_url(node.field_mobile_media.entity.field_media_image.entity.fileuri)}});">
+          <div class="container">
+            <div class="banner-inr">
+              <div class="row align-items-center">
+                <div class="col-md-7">
+                  <div class="banner-content">
+                    <h1>{{ title_prefix }}{{ label }}{{ title_suffix }}<span class="red-text">{{ sub_title }}</span></h1>
+                    <br>
+                      {{ body|raw }}
+                    <div class="banner-form c-form">              
+                      {# {{ drupal_entity('webform', 'join') }}                      #}
+                    {{ drupal_entity('webform', 'join_form') }} 
+                    </div> 
+                  </div>
+                </div>
+                <div class="col-md-5">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# {{ mobile_media.image }} #}
+  {{ drupal_view('home_members_block','block_1') }}
+ {{ content.field_paragraphs }}
+
+
+<style type="text/css">
+  .banner-content .alert.alert-status.alert-success.alert-dismissible.fade.show {
+    width: 100%;
+}
+</style>

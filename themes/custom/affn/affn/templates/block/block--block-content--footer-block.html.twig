@@ -1,0 +1,52 @@
+<div class="footer-sec">
+	<div class="container">
+		<div class="header-inr-flex d-flex align-items-center">
+			<div class="header-logo">
+				{{ drupal_block('system_branding_block') }}
+			</div>
+			<div class="header-right d-flex align-items-center">
+				<div class="header-nav">
+					{{ drupal_menu('footer') }}			
+				</div>
+			</div>
+		</div>
+		<div class="footer-map-contact d-flex bg-gray">
+			<div class="footer-map">
+				{{ content.body }}              
+			</div>
+			<div class="footer-contact gray-text2">
+				{{ title_prefix }}
+				{% if label %}
+					<h6 class="gray-text2">{{ label|striptags }}</h6>
+				{% endif %}
+				{{ title_suffix }}
+				{% for items in content.field_address %}
+					{% if items.value  %}
+				<p><strong>Address:&nbsp;</strong>{{ items.value }}</p>	
+					{% endif %}							
+				{% endfor %}
+
+				{% for items in content.field_phone %}
+					{% if items.value  %}
+					<p><strong>Phone:</strong> <a href="tel:{{ items.value }}">+{{ items.value }}</a></p>		
+					{% endif %}							
+				{% endfor %}
+
+				{% for items in content.field_email %}
+					{% if items.value  %}
+				<p><strong>Mail:</strong> <a href="mailto:{{ items.value }}">{{ items.value }}</a></p>	
+					{% endif %}							
+				{% endfor %}
+
+				{% for items in content.field_cvr %}
+					{% if items.value  %}
+				<p><strong>CVR:&nbsp;</strong>{{ items.value }}</p>	
+					{% endif %}							
+				{% endfor %}
+			</div>
+		</div>
+		{% if content.field_social %}		
+		{{ content.field_social }}
+		{% endif %}
+	</div>
+</div>

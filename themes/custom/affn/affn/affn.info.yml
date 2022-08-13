@@ -1,0 +1,24 @@
+name: affn
+type: theme
+description: 'subtheme affn'
+core: 8.x
+core_version_requirement: ^8 || ^9
+base theme: bootstrap4
+
+# Stylesheets.
+stylesheets-remove:
+  - '@bootstrap4/css/style.css'
+
+# Libraries.
+libraries:
+  - affn/global-styling
+
+# Regions.
+regions:
+  header: Header
+  branding : branding
+  breadcrumb: Breadcrumbs
+  content: 'Main content'
+  subscribe: 'SIGN UP FOR OUR NEWSLETTER'
+  sidebar: 'Sidebar'
+  footer: Footer

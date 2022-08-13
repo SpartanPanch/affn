@@ -1,0 +1,44 @@
+ <div class="what-get-join">
+		<div class="container">
+			<div class="what-get-join-inr">
+				<div class="row">
+                 {% for paragraph in paragraphs %}          
+                  <div class="col-lg-4 col-md-6 what-get-col">
+						<div class="what-get-col-box">
+							<div class="what-get-count"><span>{{ loop.index }}</span></div>
+							<div class="what-get-col-info dot-list">
+								<h2 class="ft-26 mb-px-20">{{ paragraph.title }}</h2>						
+									{{ paragraph.content|raw }}								
+							</div>
+						</div>
+					</div>                  
+                 {% endfor %}
+					
+				    <div class="col-lg-4 col-md-6 what-get-col">
+						<div class="become-our-member-box bg-red-gradient white-text">
+							<div class="become-member-box-info dot-list">
+								<h3 class="ft-22 mb-px-20">{{ sub_title }}</h3>
+							        {{ content|raw }}
+
+							       <div class="btn-wrap">
+
+							       {% for item in paragraphs12 %}
+							       	{% if item.download_file %}
+							       		<a target="_blank" class="btn {%if loop.index ==1%} btn-prim {% else %} btn-grey2 {% endif %}" href="{{ item.download_file }}">{{item.title}}</a>
+							       		{%  else %}
+							       			<a target="_blank" class="btn {%if loop.index ==1%} btn-prim {% else %} btn-grey2 {% endif %}" href="{{ item.link.url}}">{{ item.link.title}}</a>
+							       		{% endif %}   
+							       	{% endfor %}
+							      {#  	
+								     {% for link in links %}
+									     <a href="{{ link.url }}" class="btn {{link.classes}}">{{ link.title }}</a>
+									 {% endfor %}	 #}				
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>

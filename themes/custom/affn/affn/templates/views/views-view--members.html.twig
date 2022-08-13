@@ -1,0 +1,90 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'views-article-finder',
+  ]
+%}
+<div{{ attributes.addClass(classes) }} >  
+    {{ title_prefix }}
+    {{ title }}
+    {{ title_suffix }}
+    {# <div class="title-sec text-center bg-gray full-title">
+      <div class="container">
+        <div class="page-title">
+          <a href="javascript:history.back()" class="back-btn gray-text2"><img
+              src="/{{ directory }}/images/left-arrow.png"> Back</a>        
+          
+        </div>
+      </div>
+    </div> #}
+<div class="our-events members-search">
+    <div class="container">
+      <div class="row title-search-row">
+        <div class="col-lg-8 col-md-8">        
+          {% if header %}
+          {{ header }}
+          {% else %}
+           <h3 class="ft-26 show-onsearch1"> RESULTS <span>(0)</span></h3>
+          {% endif %}
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div class="search-box search-events members-search-inner">
+            {% if exposed -%}
+            {{ exposed }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if attachment_before -%}
+    {{ attachment_before }}
+    {% endif %}
+    {% if rows -%}     
+        {{ rows }}   
+    {% elseif empty -%}
+    {{ empty }}
+    {% endif %}
+    {{ pager }}
+    {{ attachment_after }}
+    {{ more }}
+    {% if footer %}
+    {{ footer }}
+    {% endif %}
+    {{ feed_icons }}
+  </div>
+  </div>
+

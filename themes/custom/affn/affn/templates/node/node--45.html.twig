@@ -1,0 +1,32 @@
+	<div class="title-sec text-center bg-gray full-title">
+		<div class="container">			
+			{{ title_prefix }}
+			{% if label %}
+				<h2 class="red-text title"><span>{{label}}</span></h2>
+			{% endif %}				
+			{{ title_suffix }}
+		</div>
+	</div>
+
+	<div class="banner-sec small-banner join-banner" style="background-image: url('{{file_url(atricle_image.img)}}');">
+		<div class="container">
+			<div class="banner-inr">
+				<div class="banner-content">
+					<h1 class="h2">{{ sub_title }}</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="banner-sec small-banner join-banner mobile-view" id="join-mobile-view" style="background-image: url('{{mobile_media.image}}');">
+		<div class="container">
+			<div class="banner-inr">
+				<div class="banner-content">
+					<h1 class="h2">{{ sub_title }}</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{{ content.field_paragraphs }}
+

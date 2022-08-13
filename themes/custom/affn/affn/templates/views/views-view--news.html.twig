@@ -1,0 +1,84 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'views-repository-finder',
+  ]
+%}
+<div{{ attributes.addClass(classes) }} id="news">
+  {{ title_prefix }}
+  {{ title }}
+  {{ title_suffix }}
+<div class="title-sec text-center bg-gray full-title">
+    <div class="container">
+      <h2 class="red-text title"><span>Selected News</span></h2>
+    </div>
+  </div>
+  <div class="our-news latest-news pt-px-50 pb-px-50">
+    <div class="container">
+      <div class="row title-search-row">
+        <div class="col-lg-8 title-for-serch" id="title-for-serch">
+          {% if header %}
+          {{ header }}
+          {% else %}
+           <h3 class="ft-26 show-onsearch1"> RESULTS <span>(0)</span></h3>
+          {% endif %}
+        </div>
+        <div class="col-lg-4">
+          <div class="search-box search-events members-search-inner">
+              {{ exposed }}
+          </div>
+          {{ attachment_before }}
+        </div>
+      </div>
+      <div class="our-news-inr">
+        <div class="row">
+           {% if rows -%}      
+              {{ rows }}
+          {% elseif empty -%}
+            {{ empty }}
+          {% endif %}   
+        </div>
+      </div>
+      <nav aria-label="Page navigation example" class="pt-px-30 pb-px-40">
+          {{ pager }}
+      </nav>
+       {{ attachment_after }}
+      {{ more }}
+      {{ feed_icons }}
+    </div>
+  </div>
+  </div>

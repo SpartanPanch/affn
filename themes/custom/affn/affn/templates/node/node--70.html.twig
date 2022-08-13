@@ -1,0 +1,68 @@
+<div class="title-sec text-center bg-gray full-title">
+		<div class="container">
+			<div class="page-title">
+				{# <a href="javascript:history.back()" class="back-btn gray-text2"><img src="/{{ directory }}/images/left-arrow.png"> Back</a> #}
+				<h2 class="red-text title"><span>{{ title_prefix }}{{ label }}{{ title_suffix }}</span></h2></br>
+				{{ body|raw }}
+			</div>
+		</div>
+	</div>
+	{# <div class="our-events members-search">
+		<div class="container">
+			<div class="row title-search-row">
+				<div class="col-lg-8">
+					<h3 class="ft-26">{{ sub_title }}</h3>
+				</div>
+				<div class="col-lg-4">
+			
+					<div class="search-box search-events "> #}
+						{# <!-- <form> -->
+							<!-- <div class="form-group  form-item"> -->
+								<!-- <input data-drupal-selector="edit-search-api-fulltext" type="text" id="edit-search-api-fulltext" name="search_api_fulltext" value="" size="30" maxlength="128" class="form-text form-control"> -->
+							    <!-- <input type="text" placeholder="Search" class="form-control"> -->
+							<!-- </div> -->
+							<!-- <button type="submit" class="btn"><img src="images/search-icon.png" alt="search icon"></button> -->
+						
+						<!-- </form> --> #}
+					{# </div>
+				</div>
+			</div>
+		</div>
+
+		<div class="members-search-inr d-flex pb-px-10">
+			<div class="members-search-alphabets">
+				<ul class="nav nav-tabs az-links" role="tablist">
+				{% for key,item in members %}	
+				  <li class="first odd nav-item"><a href="#letter-{{key}}" data-toggle="tab" class="{%if loop.index ==1 %} active {%endif%} nav-link"><span>{{key}}</span></a></li>
+				{% endfor %}
+				</ul>
+			</div>
+			<div class="members-search-tabs-content bg-gray">
+				<div class="tab-content">
+				{% for key,item in members %}
+				 <div id="letter-{{key}}" class="tab-pane {%if loop.index ==1 %} active {%endif%}">
+				    	<div class="m-search-tabs-content-row">
+				    		<div class="letter-count">
+				    			<span>{{key}}</span>
+				    		</div>
+				    		<div class="row">
+								{% for items in item %}
+								<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6" id="{{items.title}}">
+							      	<div class="member-item">
+						               <div class="member-item-box">
+				                 			 <img src="{{items.image}}" width="142" height="79" alt="image" typeof="Image">
+				               			</div>
+				               			<div class="member-item-info">											  
+				               				<p> <a href="#">{{items.title}}</a></p>
+				               			</div>
+				               		</div>
+				               	</div>
+								   {% endfor %}
+				             </div>
+				        </div>
+				    </div> 
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>  #}

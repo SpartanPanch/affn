@@ -1,0 +1,116 @@
+<div class="members-search-inr-wrap" id="remove-for-mobile">
+	<div class="container">
+		<div class="members-search-inr d-flex pb-px-10">
+			<div class="members-search-alphabets" id="navv">
+				<nav class="nav-tabs section-nav">
+					<ul >
+						{% for key,items in members_list %}
+						{% if key == 'Å' %}
+						{% set keyy = 'A1' %}
+						{% elseif key == 'å' %}
+						
+						{% set keyy = 'B1' %}
+						{% elseif key == 'Ø' %}
+						
+						{% set keyy = 'C1' %}
+						{% elseif key == 'ø' %}
+					
+						{% set keyy = 'D1' %}
+						{% elseif key == 'Æ' %}
+						
+						{% set keyy = 'F1' %}
+						{% elseif  key == 'æ' %}
+						
+						{% set keyy = 'F1' %}	
+						{% else %}
+						{% set keyy = key %}					
+						{% endif %}
+							<li class="first odd nav-item alphabets-list-desktop"><a href="#letter-{{keyy}}" class="nav-link"><span>{{key}}</span></a></li>
+						{% endfor %}
+					</ul>
+				</nav>
+			</div>
+
+			<div id="mainn" class="members-search-tabs-content bg-gray">
+				<main>
+					{% for key,items in members_list %}	
+						{% if key == 'Å' %}
+						{% set keyy = 'A1' %}
+						{% elseif key == 'å' %}						
+						{% set keyy = 'B1' %}
+						{% elseif key == 'Ø' %}						
+						{% set keyy = 'C1' %}
+						{% elseif key == 'ø' %}					
+						{% set keyy = 'D1' %}
+						{% elseif key == 'Æ' %}						
+						{% set keyy = 'F1' %}
+						{% elseif  key == 'æ' %}						
+						{% set keyy = 'F1' %}	
+						{% else %}
+						{% set keyy = key %}					
+						{% endif %}
+
+						{% if key %}
+							<section id="letter-{{keyy}}" class="tab-pane">
+								<div class="m-search-tabs-content-row">
+									<div class="letter-count">
+										<span>{{key}}</span>
+									</div>
+									<div class="row">
+										{% for item in items %}
+											<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6" id="{{item.title}}">
+												<div class="member-item">
+
+													<a href="/node/{{ item.nid }}">
+														<div class="member-item-box">
+															{% if item.field_media.image is not empty %}
+																<img src="{{item.field_media.image}}" width="142" height="79" alt="image"
+																typeof="Image">
+															{% else %}
+																<img src="/themes/custom/affn/images/blank-img-small.jpg">
+															{% endif %}	
+														</div>
+													</a>
+
+
+													<div class="member-item-info">
+														<p> <a href="/node/{{ item.nid }}">{{item.title}}</a></p>
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</section>
+						{% endif %}
+					{% endfor %}
+				</main>
+			</div>
+		</div>
+	</div>
+<script ="#members-main-script">
+   	// let mainNavLinksDesktop = document.querySelectorAll("#navv nav ul li a");
+   	// let mainSections = document.querySelectorAll("#mainn main section");
+   	// window.addEventListener("scroll", event => {
+   	// 	let fromTop = window.scrollY;
+   	// 	mainNavLinksDesktop.forEach(link => {
+   	// 		let section = document.querySelector(link.hash);
+   	// 		if (
+   	// 			section.offsetTop <= fromTop &&
+   	// 			section.offsetTop+30 + section.offsetHeight > fromTop
+   	// 		) {
+   	// 			link.classList.add("current");
+   	// 		} else {
+   	// 			link.classList.remove("current");
+   	// 		}
+   	// 	});
+   	// });
+
+</script>
+
+
+</div>
+  
+     
+     
+   

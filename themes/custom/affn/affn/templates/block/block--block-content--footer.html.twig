@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+    <div class="col-md-7">
+        {% if content.body %}        
+        {{ content.body }}
+        {% endif %}
+    </div>
+    <div class="col-md-5">
+        {% if content.field_address  %}
+        {{ content.field_address }}
+        {% endif %} 
+        {% if content.field_email  %}
+        {{ content.field_email }}
+        {% endif %} 
+        {% if content.field_phone %}
+        {{ content.field_phone }}
+        {% endif %} 
+        {% if content.field_cvr %} 
+        {{ content.field_cvr }}
+        {% endif %} 
+    </div>
+    </div>
+</div>
+{# test@2021) #}

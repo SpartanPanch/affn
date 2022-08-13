@@ -1,0 +1,79 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+    'views-repository-finder',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+<div class="members-search-inr d-flex pb-px-10">
+<div class="members-search-alphabets">
+				<ul class="nav nav-tabs az-links" role="tablist">
+				   <li class="first odd nav-item"><a href="#letter-A" data-toggle="tab" class="active nav-link"><span>A</span></a></li>
+				   <li class="even nav-item"><a href="#letter-B" data-toggle="tab" class="nav-link"><span>B</span></a></li>
+				   <li class="odd nav-item"><a href="#letter-C" data-toggle="tab" class="nav-link"><span>C</span></a></li>
+				   <li class="even nav-item"><a href="#letter-D" data-toggle="tab" class="nav-link"><span>D</span></a></li>
+				   <li class="odd nav-item"><a href="#letter-E" data-toggle="tab" class="nav-link"><span>E</span></a></li>
+			
+				</ul>
+			</div>
+<div class="members-search-tabs-content bg-gray">
+				<div class="tab-content">
+  {{ title_prefix }}
+  {{ title }}
+  {{ title_suffix }}
+              {{ header }} 
+                {{ exposed }}
+          {{ attachment_before }}
+        <div class="row">
+           {% if rows -%}      
+              {{ rows }}
+          {% elseif empty -%}
+            {{ empty }}
+          {% endif %}   
+        </div>
+          {{ pager }}
+      </nav>
+       {{ attachment_after }}
+      {{ more }}
+      {{ feed_icons }}
+  </div>
+  </div>
+  </div>
+  </div>
+
+  
+			

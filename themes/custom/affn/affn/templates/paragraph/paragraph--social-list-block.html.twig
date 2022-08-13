@@ -1,0 +1,8 @@
+	<div class="footer-social d-flex justify-content-center align-items-center">
+		<h6>FOLLOW US</h6>
+		<ul class="d-flex">	
+			{% for paragraph in paragraphs %}
+				<li><a href="{{paragraph.link.url}}"><img src="{{paragraph.media.image}}" alt="image"></a></li>
+			{% endfor %}	
+		</ul>
+	</div>

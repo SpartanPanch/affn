@@ -1,0 +1,101 @@
+{#
+/**
+ * @file
+ * Default theme implementation for main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A CSS-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{#
+/**
+ * @file
+ * Theme override to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ */
+#}
+{%
+    set classes = [
+    dom_id ? 'js-view-dom-id-' ~ dom_id,
+]
+%}
+<div{{ attributes.addClass(classes) }} id="categoryMenu">
+{{ title_prefix }}
+{{ title }}
+{{ title_suffix }}
+<div class="our-events past-events bg-gray">
+  <div class="container">
+    <div class="our-events-inr">
+      <div class="row title-search-row">
+        <div class="col-lg-8 title-for-serch" id="title-for-serch">
+          {# <h3 class="ft-26">PAST EVENTS</h3> #}
+        {% if header %}
+          {{ header }}
+          {% else %}
+           <h3 class="ft-26 show-onsearch1"> RESULTS <span>(0)</span></h3>
+          {% endif %}
+        </div>        
+        <div class="col-lg-4">
+          <div class="search-box search-events members-search-inner">
+            {{ exposed }}    
+          </div>
+        </div>
+      </div>
+      {% if rows -%}
+        <div class="view-rows row d-flex justify-content-between">
+          <div class="row">
+            {{ rows }}
+           {{ pager }}
+          </div>        
+        </div>
+      {% elseif empty -%}
+        {{ empty }}
+      {% endif %}
+
+     
+
+      {{ attachment_after }}
+
+      {{ more }}
+
+      {{ feed_icons }}
+    </div>
+  </div>
+</div>
+</div>

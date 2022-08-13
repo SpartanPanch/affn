@@ -1,0 +1,132 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media_entity\MediaInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Url;
+
+use Drupal\webform\WebformInterface;
+use Drupal\webform\Plugin\WebformHandlerBase;
+use Drupal\webform\webformSubmissionInterface;
+use Drupal\webform\WebformSubmissionForm;
+use Drupal\webform\Entity\Webform;
+use Drupal\webform\Entity\WebformSubmission;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_theme_registry_alter
+*/
+function ajax_form_submit_block_theme($existing, $type, $theme, $path) {
+  return array(
+    'subscribe' => array('render element' => 'form'),
+    // 'verification' => array('render element' => 'form')
+  );	
+}
+
+    // $lang = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    // $node = $variables['node'];
+    // $type = $variables['node']->type;
+    // $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+    // $nids = $query->condition('type', 'members') ->condition('status', 1)->sort('created', 'DESC')->execute();
+    // $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);  
+    //  $metchkey = array();
+    //   $alldata1 = array();
+    //   $alldata2 = array();
+// echo "<pre>";
+//       foreach ($nodes as $key => $events) {  
+       
+//         $nid = $events->nid->value;   
+//         $alldata = array();
+//         // print_r($nid); 
+//         // echo "<br/>";
+//         $file_fid = getMedia($events->field_media->target_id);
+//         $event_tid = $events->field_category->target_id; 
+//         // $eventcat = \Drupal\taxonomy\Entity\Term::load($event_tid);
+//         // $eventlist[$key]['title'] = $events->title->value;    
+//         $alldata[] = $nid = $events->nid->value;    
+//         $alldata[] = $title = $events->title->value;  
+//         $alldata2[] = $title = $events->title->value;  
+//         $alldata2[] =$nid = $events->nid->value;    
+//         $metchkey[] = $title[0];    
+//         $alldata[] = $eventlist[$key]['imguri']  = $file_fid['image'];
+//         $alldata1[] = $alldata; 
+//     } 
+   
+//     $uniqmetchkey = array_unique($metchkey);
+//     $arr = array();
+//     foreach($uniqmetchkey as $key){
+//         $arr[] = $key;
+//     }
+//     sort($arr);   
+
+// $mainarray = array();
+// for ($i=0; $i < count($arr) ; $i++) { 
+//     $keyy = $arr[$i];
+//     $subarray = array();
+//     foreach ($alldata1 as $key => $value) {        
+//         $mainval = $value[1];   
+//         if($mainval[0] == $arr[$i]){            
+//             $subarray[] = $value;
+//         }
+//     }
+//     $mainarray[$keyy] = $subarray;
+// }
+// echo  '<pre><br/>';
+// print_r($mainarray);
+//   die();
+
+
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function ajax_form_submit_block_form_views_exposed_form_alter(&$form) {
+    // $storge = $form_state->getStorage();
+    // if (!empty($storge['view']) && $storge['view']->id() === 'my_view') {
+      if (isset($form['actions']['reset']) && isset($form['actions']['submit'])) {
+        $submit_id = $form['actions']['submit']['#id'];
+        $form['actions']['reset']['#attributes']['onclick'] = 'javascript:jQuery(this.form).clearForm();jQuery("#' . $submit_id . '").trigger("click");return false;';
+      }
+    // }
+  }
+
+
+  // function ajax_form_submit_block_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  //   $last_run_per_minut = \Drupal::state()->get('hello.last_run', 0);
+  //   print_r($last_run_per_minut);
+  //   \Drupal::logger('hello')->info('Runnning Cron every 1 minut log');
+  //     \Drupal::state()->set('hello.last_run', REQUEST_TIME);
+  // }
+
+
+  // function ajax_form_submit_block_webform_submission_presave(\Drupal\webform\Entity\WebformSubmission $submission) {
+
+  //     kint($webform_submission);
+  //     // $handler = $handlers['webform_element_email_alter'];
+
+  //       // $email = $form_state->getValue('name');
+  //       // $email1 = $form_state->getValue('email_address');
+  //       // $captcha_responce_join_form = $form_state->getValue('captcha_response_join');
+  //       // // print_r($email);
+  //       // // print_r($email1);
+  //       // // print_r($captcha_responce_join_form);
+  // }
+
+
+
+  /**
+* Implements hook_entityType_insert().
+*/
+// function ajax_form_submit_block_webform_webform_insert(EntityInterface $entity) {
+
+//   // Set some default settings when webform is created.
+//   $entity->setSetting('results_disabled',1);
+//   // This giving me error to say that remote_post is not a found.
+//   $entity->addWebformHandler($entity->getHandler('remote_post'));
+  
+//   }

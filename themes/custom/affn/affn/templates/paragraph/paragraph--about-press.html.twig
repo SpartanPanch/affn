@@ -1,0 +1,37 @@
+ 	<div class="newspost-featured-banner about-press bg-gray" id="about-press">
+ 		<div class="container">
+ 			<div class="row">
+ 				<div class="col-lg-6">
+ 					<div class="newspost-featured-bnr-info arrow-list">			 
+ 						<h2 class="ft-26">{{ title_prefix }}{{ title }}{{ title_suffix }}</h2>
+ 						<p>{{ content|raw }}</p>
+ 						<p><a href="{{ link.url }}" class="see-all-press"><strong>{{ link.title }} &gt;&gt;</strong></a></p>
+ 					</div>
+ 				</div>
+ 				<div class="col-lg-6">
+ 					<div class="newspost-featured-img absolute-img">
+ 						<img src="{{ media.image }}" alt="absolute">
+ 					</div>
+ 					<div class="about-latest-press dot-list">
+ 						<h3 class="ft-22 gray-text2">LATEST PRESS</h3>         
+ 						<ul>
+ 							{% for paragraph in paragraphs %}
+ 								<li><a href="{{paragraph.link.url}}">{{paragraph.link.title}}</a></li>
+ 							{% endfor %}
+ 						</ul>				
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+
+
+ <div class="get-in-touch pb-px-30 pt-px-30 " id="get-in-touch-form">
+ 	<div class="container">
+ 		<div class="get-in-touch-form c-form sq-form">
+ 			<h2 class="ft-22">GET IN TOUCH</h2>
+ 			{{ drupal_entity('webform', 'get_in_touch') }}
+ 		</div>
+ 	</div>
+ </div>
+

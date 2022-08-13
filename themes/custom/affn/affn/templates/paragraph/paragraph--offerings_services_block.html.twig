@@ -1,0 +1,23 @@
+   <div class="about-offerings" id="about-offerings">
+   	<div class="container">
+   		<div class="about-offerings-inr inner-pad">
+   			<h2 class="ft-26">{{ title_prefix }}{{ title }}{{ title_suffix }}</h2>
+   			<div class="row">
+   				{% for paragraph in paragraphs %}
+   				<div class="col-md-3 about-offerings-col">
+   					<div class="about-offerings-col-box">
+   						<div class="about-offerings-col-img">
+   							<img src="{{ paragraph.media.image }}" alt="icon of offings service">
+   						</div>
+   						<h3 class="ft-22"><a href="{{ paragraph.link.url }}"
+   								class="title with-arrow">{{ paragraph.link.title }}</a></h3>
+   					</div>
+   				</div>
+   				{% endfor %}
+   			</div>
+   		</div>
+   	</div>
+   </div>
+
+   {{ drupal_view('board_of_directors_order', 'block_1') }}
+   {{ drupal_view('about_page_secretariat', 'block_1') }}

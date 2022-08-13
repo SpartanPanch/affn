@@ -1,0 +1,60 @@
+{# vieo section #}
+<div class="why-affn bg-gray">
+<div class="container">
+<div class="why-affn-inr inner-pad">
+<h3 class="ft-26 red-text">{{ title_prefix }}{{ title }}{{ title_suffix }}</h3>
+{% for paragraph in paragraphs %}   
+	{% if  loop.index % 2  %}
+		{% set class = "odd" %}
+		{% else %}
+			{% set class = "even" %}
+			{% endif %} 
+			<div class="why-affn-flex-wrap {{ class }}">
+				{{ paragraph.content|raw }}
+				<div class="row">
+					<div class="col-md-4 why-affn-flex-col">
+						<div class="why-affn-flex-box">
+							<div class="why-affn-flex-col-img">
+								<img src="{{paragraph.media.image}}" alt="{{ paragraph.media.alt }}">
+							</div>
+							<div class="why-affn-flex-col-info">
+								<h5>{{ paragraph.title }}</h5>
+								<p class="red-text">{{ paragraph.sub_title }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8 why-affn-flex-col">
+						<div class="why-affn-flex-video">
+							<div class="why-affn-flex-video-overlay">
+								<span class="play-icon" data-toggle="modal" data-url="{{paragraph.video.url}}" data-target="#affn_intro">
+									<img src="{{ base_path ~ directory }}/images/play-circle.png" alt="play"></span>
+									{% if paragraph.video_poster.image %}
+										<img src="{{paragraph.video_poster.image}}" alt="{{paragraph.video_poster.alt}}">												
+									{% else %}
+										<img src="{{paragraph.video.thumbnail}}" alt="{{paragraph.video_poster.alt}}">	
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}			
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade video_modal" id="affn_what_gain" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-close" data-dismiss="modal" aria-label="Close">
+				<span>×</span>
+			</div>
+			<div class="modal-body">
+				<div class="why-affn-flex-video">						
+					<iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+			</div>	        
+		</div>
+	</div>
+</div>

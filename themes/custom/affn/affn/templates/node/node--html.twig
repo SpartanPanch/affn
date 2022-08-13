@@ -1,0 +1,29 @@
+<div class="node node--page" data-label="{{ page_title }}">
+    <section class="page-hero">
+        <div class="page-hero__top"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 page-hero__content">
+                    <div class="inview">
+                        {% if title %}
+                            <h1 class="page-hero__title header2 balance-text">                                
+                                {{ title_prefix }}{{ title }}{{ title_suffix }}
+                            </h1>
+                        {% else %}
+                            <h1 class="page-hero__title balance-text">
+                              {{ title_prefix }}{{ label }}{{ title_suffix }}
+                            </h1>
+                        {% endif %}
+                        <div class="page-hero__description lead">
+                            {{ body|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    {% if content.field_paragraphs %}
+        {{ content.field_paragraphs }}
+    {% endif %}
+</div>

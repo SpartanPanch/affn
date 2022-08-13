@@ -1,0 +1,18 @@
+<div class="affn-history">
+    <div class="container">
+      <div class="affn-history-inr inner-pad">
+        <h2 class="ft-26">{{ title_prefix }}{{ title }}{{ title_suffix }}</h2>
+        <div class="affn-history-slide-main">
+          <img src="{{ media.image }}" alt="{{ media.alt }}">
+          <div class="affn-history-slide slick-slider" id="affn_history_slider">
+          {% for paragraph in paragraphs %}  
+            <div class="affn-history-slide-item">
+              <h3 class="ft-22">{{ paragraph.title }}</h3>
+              {{ paragraph.content|raw }}
+            </div>
+          {% endfor %}        
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

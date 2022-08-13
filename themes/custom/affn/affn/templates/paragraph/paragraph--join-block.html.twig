@@ -1,0 +1,36 @@
+  <div class="join-nework bg-red-gradient white-text text-center pt-px-60 pb-px-60">
+		<div class="container">
+			<div class="join-nework-content">
+				<h3><span>{{ title_prefix }}{{ title }}{{ title_suffix }}</span>{{sub_title}}</h3>
+				{{ content|raw }}
+				<a class="btn btn-white1 wd-auto" data-toggle="modal" data-target="#members_modal" href="{{link.url}}">{{link.title}}</a>
+			</div>
+		</div>
+	</div>	
+
+	<div class="modal fade members-popup" id="members_modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      	<div class="modal-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </div>
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h2 class="ft-22 red-text">{{ popup_title }}</h2>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+	      	{{ popup_content | raw}}
+          <div class="btn-wrap hk">
+          {% for item in paragraphs %}
+            {% if item.download_file %}
+                   <a target="_blank" class="btn {%if loop.index ==1%} btn-prim {% else %} btn-grey2 {% endif %}" href="{{ item.download_file }}">{{item.title}}</a>
+                {%  else %}
+                   <a target="_blank" class="btn {%if loop.index ==1%} btn-prim {% else %} btn-grey2 {% endif %}" href="{{ item.link.url}}">{{ item.link.title}}</a>
+                {% endif %}   
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

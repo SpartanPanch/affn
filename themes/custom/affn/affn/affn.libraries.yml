@@ -1,0 +1,20 @@
+global-styling:
+  css:
+    theme:
+      https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css: { type: external, minified: true }
+      css/bootstrap.min.css: { minified: true }   
+      css/style.css: {}  
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/drupal
+    - core/drupalSettings 
+    - core/jquery.once
+  js:   
+    js/slick.js: {}
+    https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js: { type: external  , attributes: { defer: true, async: true, data-test: map-link , minified: true } }
+    https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/additional-methods.min.js: { type: external  ,minified: true  }
+    https://www.google.com/recaptcha/api.js: { type: external  ,  minified: true  }
+    js/script.js: {}    
+    js/custom-script.js: {}
+    

@@ -1,0 +1,42 @@
+<div class="about-business-forum">
+  <div class="container">
+    <div class="about-business-forum-inr inner-pad">
+      <h2 class="ft-26 text-center">{{ title_prefix }}{{ title }}{{ title_suffix }}</h2>
+      <div class="row">
+
+        {% for paragraph in paragraphs %}
+        <div class="col-md-4 about-business-forum-col">
+          <div class="about-business-forum-col-box">
+            <div class="about-business-col-img">
+              <img src=" {{ paragraph.media.image }}" alt="building-icon">
+              <span class="h2 red-text">{% if paragraph.sub_title %}
+                {{ paragraph.sub_title|striptags }}{% endif %}</span>
+            </div>
+            <div class="about-business-col-desc">
+              <p>{{ paragraph.content|striptags }}</p>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+        {# 
+
+            {% for paragraph in paragraph.field_media_block_ %}
+            <div class="col-md-4 about-business-forum-col"> 
+            <div class="about-business-forum-col-box">
+              <div class="about-business-col-img">
+                <!-- <img src="images/building-icon.svg" alt="building-icon"> -->
+                {{  paragraph.entity.field_media.uri }}
+                <span class="h2 red-text">{% if paragraph.entity.field_sub_title %} {{ paragraph.entity.field_sub_title.value|striptags }}{% endif %}</span>
+              </div>
+              <div class="about-business-col-desc">
+                <p>{{ paragraph.entity.field_content.value|striptags }}</p>
+              </div>
+            </div>
+          </div>
+            {% endfor %} #}
+
+      </div>
+    </div>
+  </div>
+</div>
